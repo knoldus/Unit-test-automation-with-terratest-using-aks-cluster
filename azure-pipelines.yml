@@ -1,0 +1,44 @@
+trigger:
+- main
+
+pool: Default
+  #vmImage: ubuntu-latest
+
+steps:
+- checkout: self
+
+- script:  ls
+
+  displayName: 'Run a one-line script'
+
+- script: |
+    cd aks-terraform
+    ls
+- script: ls
+- script: |
+    cd aks-terraform
+    cd test
+    go mod init TestTerraformAzureAKS
+  displayName: init
+
+
+- script: |
+    cd aks-terraform
+    cd test
+    go mod tidy
+  displayName: Tidy
+
+- script: |
+    cd aks-terraform
+    cd test
+    export ARM_SUBSCRIPTION_ID=0f2e685f-410b-4d1a-a18c-83ae2efaad95
+  displayName: testing
+
+
+
+- script: |
+    cd aks-terraform
+    cd test
+    go test -v -timeout 30m 
+  displayName: testing
+
